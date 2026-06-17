@@ -1,0 +1,16 @@
+{
+  "name": "helados-nevados-api",
+  "version": "1.0.0",
+  "description": "API REST con MongoDB para la skill Helados Nevados",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.18.3",
+    "mongodb": "^6.6.2"
+  }
+}
