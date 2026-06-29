@@ -21,38 +21,49 @@ const DB_NAME = process.env.DB_NAME || 'helados_nevados';
 let db;
 
 const DEFAULT_IMAGES = {
-  chocolate: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&w=900&q=80',
-  fresa: 'https://images.unsplash.com/photo-1560008581-09826d1de69e?auto=format&fit=crop&w=900&q=80',
-  oreo: 'https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?auto=format&fit=crop&w=900&q=80',
-  vainilla: 'https://images.unsplash.com/photo-1570197788417-0e82375c9371?auto=format&fit=crop&w=900&q=80',
-  menta: 'https://images.unsplash.com/photo-1567206563064-6f60f40a2b57?auto=format&fit=crop&w=900&q=80',
-  frutosRojos: 'https://images.unsplash.com/photo-1488900128323-21503983a07e?auto=format&fit=crop&w=900&q=80',
-  tamano: 'https://images.unsplash.com/photo-1567206563064-6f60f40a2b57?auto=format&fit=crop&w=900&q=80',
-  cono: 'https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?auto=format&fit=crop&w=900&q=80',
-  vaso: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&w=900&q=80',
-  topping: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=900&q=80',
-  malteada: 'https://images.unsplash.com/photo-1514996937319-344454492b37?auto=format&fit=crop&w=900&q=80',
-  postre: 'https://images.unsplash.com/photo-1514849302-984523450cf4?auto=format&fit=crop&w=900&q=80',
-  delivery: 'https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?auto=format&fit=crop&w=900&q=80'
+  chocolate: 'https://babyshowerchocolate.com/cdn/shop/articles/chocolate_hero1-d62e5444a8734f8d8fe91f5631d51ca5.jpg?v=1694433941&width=714',
+  fresa: 'https://www.finedininglovers.es/sites/default/files/styles/1_1_768x768/public/article_content_images/fresas%C2%A9iStock.jpg.webp?itok=i5qzAQ1_',
+  oreo: 'https://www.pediatriamildias.com/wp-content/uploads/2022/09/Blog53.jpg',
+  vainilla: 'https://panyoli.com.mx/images/transportar_pastel_vainilla.jpg',
+  menta: 'https://www.eluniverso.com/resizer/v2/JPXZJSC36RH6RD4IV53LPWNR3E.jpg?auth=4b6d0292783c55134d6388dab4356202c18f59ea3bfd69aacc90b9dc3b1ba71e&width=1191&height=670&quality=75&smart=true',
+  frutosRojos: 'https://hidromielzangana.com/wp-content/uploads/2023/06/frutos-rojos-768x402.jpg',
+  tamanoChico: 'https://gmz.ltd/wp-content/uploads/2024/09/A-Quick-Guide-to-Standard-Ice-Cream-Cup-Sizes-in-oz-and-ml-GMZ-768x768.webp',
+  tamanoMediano: 'https://media-cdn.tripadvisor.com/media/photo-s/0b/31/b2/3f/helado-mediano-dos-sabores.jpg',
+  tamanoGrande: 'https://www.honokage.com/wp-content/uploads/2024/11/Ice-Cream-Container-Sizes-768x432.jpg',
+  tamanoFamiliar: 'https://amarket.com.bo/cdn/shop/files/7771224005777_646x646.jpg?v=1712345219',
+  cono: 'https://granvita.com/wp-content/uploads/2018/08/recetas_conosavena_Granvita-1536x804-1.jpg',
+  vaso: 'https://http2.mlstatic.com/D_NQ_NP_810893-MLM106763272062_022026-O.webp',
+  barquillo: 'https://www.grupochantilly.com.mx/wp-content/uploads/2023/07/Barquillo-unicornio-768x675.png',
+  canasta: 'https://restauranteinsignia.com/wp-content/uploads/2025/05/Canasta-waffle-helado.jpg',
+  chispas: 'https://verditia.com/wp-content/uploads/2020/03/chispas-de-chocolate.jpg',
+  gomitas: 'https://i0.wp.com/foodandwineespanol.com/wp-content/uploads/2021/09/gomitas.webp?fit=2560%2C1440&ssl=1',
+  cajeta: 'https://sabroso.mx/wp-content/uploads/2025/08/Cajeta-de-Celaya-768x438.jpg',
+  nuez: 'https://upload.wikimedia.org/wikipedia/commons/b/b2/Walnuts_-_whole_and_open_with_halved_kernel.jpg',
+  chocolateLiquido: 'https://colday.com.mx/cdn/shop/articles/ac9c4b2ee54cce69d6189f9a1a43cf0d_ddbfb4c4-5bca-49d5-9839-c274da74ea02_720x.jpg?v=1773155360',
+  malteada: 'https://cdn7.kiwilimon.com/recetaimagen/3666/640x426/10613.jpg.webp',
+  paletas: 'https://images.cookforyourlife.org/wp-content/uploads/2015/08/shutterstock_451717216-768x512.jpg',
+  postre: 'https://www.cocinavital.mx/wp-content/uploads/2018/02/postres_vasitos.jpg',
+  delivery: 'https://media.istockphoto.com/id/1221101939/es/foto/concepto-de-entrega-asian-man-mano-aceptando-una-entrega-de-cajas-de-reparto-de-repartidor.jpg?s=1024x1024&w=is&k=20&c=EEhKFD_9dR2NIGgU0lJBuUZE6-QEjza4i922Dv28iw4=',
+  vegano: 'https://jappi.com.co/wp-content/uploads/2021/01/como-preparar-helado-vegano-imagen-destacada.jpg'
 };
 
 const catalogDefaults = {
   tamanos: {
     chico: {
       descripcion: '$25 | Porcion individual',
-      imagen: DEFAULT_IMAGES.tamano
+      imagen: DEFAULT_IMAGES.tamanoChico
     },
     mediano: {
       descripcion: '$35 | El favorito de la casa',
-      imagen: DEFAULT_IMAGES.tamano
+      imagen: DEFAULT_IMAGES.tamanoMediano
     },
     grande: {
       descripcion: '$45 | Doble antojo',
-      imagen: DEFAULT_IMAGES.tamano
+      imagen: DEFAULT_IMAGES.tamanoGrande
     },
     familiar: {
       descripcion: '$95 | Para compartir',
-      imagen: DEFAULT_IMAGES.tamano
+      imagen: DEFAULT_IMAGES.tamanoFamiliar
     }
   },
   tipos: {
@@ -66,21 +77,21 @@ const catalogDefaults = {
     },
     barquillo: {
       descripcion: 'Toque artesanal con textura dorada.',
-      imagen: DEFAULT_IMAGES.cono
+      imagen: DEFAULT_IMAGES.barquillo
     },
     canasta: {
       descripcion: 'Formato especial para postre premium.',
-      imagen: DEFAULT_IMAGES.vaso
+      imagen: DEFAULT_IMAGES.canasta
     }
   },
   toppings: {
     chispas: {
       descripcion: 'Extra $5 | Toque divertido de color.',
-      imagen: DEFAULT_IMAGES.topping
+      imagen: DEFAULT_IMAGES.chispas
     },
     gomitas: {
       descripcion: 'Extra $7 | Dulce y suave.',
-      imagen: DEFAULT_IMAGES.topping
+      imagen: DEFAULT_IMAGES.gomitas
     },
     'oreo triturada': {
       descripcion: 'Extra $8 | Galleta crujiente sobre crema.',
@@ -88,20 +99,20 @@ const catalogDefaults = {
     },
     cajeta: {
       descripcion: 'Extra $6 | Dulzor tradicional.',
-      imagen: DEFAULT_IMAGES.topping
+      imagen: DEFAULT_IMAGES.cajeta
     },
     nuez: {
       descripcion: 'Extra $10 | Aroma tostado y textura premium.',
-      imagen: DEFAULT_IMAGES.topping
+      imagen: DEFAULT_IMAGES.nuez
     },
     'chocolate liquido': {
       descripcion: 'Extra $6 | Salsa intensa y brillante.',
-      imagen: DEFAULT_IMAGES.chocolate
+      imagen: DEFAULT_IMAGES.chocolateLiquido
     }
   },
   servicios: {
     paletas: {
-      imagen: DEFAULT_IMAGES.fresa
+      imagen: DEFAULT_IMAGES.paletas
     },
     malteadas: {
       imagen: DEFAULT_IMAGES.malteada
@@ -113,7 +124,7 @@ const catalogDefaults = {
       imagen: DEFAULT_IMAGES.delivery
     },
     'helado vegano': {
-      imagen: DEFAULT_IMAGES.vainilla
+      imagen: DEFAULT_IMAGES.vegano
     }
   }
 };
