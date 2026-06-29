@@ -17,75 +17,23 @@ const PORT = process.env.PORT || 3000;
 const API_TOKEN = process.env.API_TOKEN || 'dev-token-helados';
 const MONGODB_URI = process.env.MONGODB_URI;
 const DB_NAME = process.env.DB_NAME || 'helados_nevados';
-const CLOUDINARY_CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME || '';
-const CLOUDINARY_FOLDER = (process.env.CLOUDINARY_FOLDER || 'helados-nevados').replace(/^\/+|\/+$/g, '');
 
 let db;
 
-function cloudinaryUrl(publicId, fallbackUrl) {
-  if (!CLOUDINARY_CLOUD_NAME || !publicId) {
-    return fallbackUrl;
-  }
-
-  const normalizedId = String(publicId).replace(/^\/+|\/+$/g, '');
-  const folderPrefix = CLOUDINARY_FOLDER ? `${CLOUDINARY_FOLDER}/` : '';
-
-  return `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload/f_auto,q_auto,w_900,h_600,c_fill/${folderPrefix}${normalizedId}`;
-}
-
 const DEFAULT_IMAGES = {
-  chocolate: cloudinaryUrl(
-    'sabores/chocolate',
-    'https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&w=900&q=80'
-  ),
-  fresa: cloudinaryUrl(
-    'sabores/fresa',
-    'https://images.unsplash.com/photo-1560008581-09826d1de69e?auto=format&fit=crop&w=900&q=80'
-  ),
-  oreo: cloudinaryUrl(
-    'sabores/oreo',
-    'https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?auto=format&fit=crop&w=900&q=80'
-  ),
-  vainilla: cloudinaryUrl(
-    'sabores/vainilla',
-    'https://images.unsplash.com/photo-1570197788417-0e82375c9371?auto=format&fit=crop&w=900&q=80'
-  ),
-  menta: cloudinaryUrl(
-    'sabores/menta',
-    'https://images.unsplash.com/photo-1567206563064-6f60f40a2b57?auto=format&fit=crop&w=900&q=80'
-  ),
-  frutosRojos: cloudinaryUrl(
-    'sabores/frutos-rojos',
-    'https://images.unsplash.com/photo-1488900128323-21503983a07e?auto=format&fit=crop&w=900&q=80'
-  ),
-  tamano: cloudinaryUrl(
-    'tamanos/base',
-    'https://images.unsplash.com/photo-1567206563064-6f60f40a2b57?auto=format&fit=crop&w=900&q=80'
-  ),
-  cono: cloudinaryUrl(
-    'tipos/cono',
-    'https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?auto=format&fit=crop&w=900&q=80'
-  ),
-  vaso: cloudinaryUrl(
-    'tipos/vaso',
-    'https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&w=900&q=80'
-  ),
-  topping: cloudinaryUrl(
-    'toppings/base',
-    'https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=900&q=80'
-  ),
-  malteada: cloudinaryUrl(
-    'servicios/malteadas',
-    'https://images.unsplash.com/photo-1514996937319-344454492b37?auto=format&fit=crop&w=900&q=80'
-  ),
-  postre: cloudinaryUrl(
-    'servicios/postres-frios',
-    'https://images.unsplash.com/photo-1514849302-984523450cf4?auto=format&fit=crop&w=900&q=80'
-  ),
-  delivery: cloudinaryUrl(
-    'servicios/entrega-domicilio',
-    'https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?auto=format&fit=crop&w=900&q=80'
-  )
+  chocolate: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&w=900&q=80',
+  fresa: 'https://images.unsplash.com/photo-1560008581-09826d1de69e?auto=format&fit=crop&w=900&q=80',
+  oreo: 'https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?auto=format&fit=crop&w=900&q=80',
+  vainilla: 'https://images.unsplash.com/photo-1570197788417-0e82375c9371?auto=format&fit=crop&w=900&q=80',
+  menta: 'https://images.unsplash.com/photo-1567206563064-6f60f40a2b57?auto=format&fit=crop&w=900&q=80',
+  frutosRojos: 'https://images.unsplash.com/photo-1488900128323-21503983a07e?auto=format&fit=crop&w=900&q=80',
+  tamano: 'https://images.unsplash.com/photo-1567206563064-6f60f40a2b57?auto=format&fit=crop&w=900&q=80',
+  cono: 'https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?auto=format&fit=crop&w=900&q=80',
+  vaso: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&w=900&q=80',
+  topping: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=900&q=80',
+  malteada: 'https://images.unsplash.com/photo-1514996937319-344454492b37?auto=format&fit=crop&w=900&q=80',
+  postre: 'https://images.unsplash.com/photo-1514849302-984523450cf4?auto=format&fit=crop&w=900&q=80',
+  delivery: 'https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?auto=format&fit=crop&w=900&q=80'
 };
 
 const catalogDefaults = {
@@ -386,13 +334,11 @@ function enrichCatalogItem(collection, doc) {
   const base = clean(doc);
   const defaults = catalogDefaults[collection] || {};
   const fallback = defaults[normalizar(base.nombre)] || {};
-  const preferredImage =
-    CLOUDINARY_CLOUD_NAME && fallback.imagen ? fallback.imagen : base.imagen || fallback.imagen;
 
   return {
     ...base,
     descripcion: base.descripcion || fallback.descripcion,
-    imagen: preferredImage
+    imagen: base.imagen || fallback.imagen
   };
 }
 
